@@ -105,9 +105,9 @@ markupsafe==2.1.5
     #   wtforms
 mdurl==0.1.2
     # via markdown-it-py
-mm-mongo==0.0.1
+mm-mongo==0.1.0
     # via mm-base1 (pyproject.toml)
-mm-std==0.0.1
+mm-std==0.1.0
     # via
     #   mm-base1 (pyproject.toml)
     #   mm-mongo

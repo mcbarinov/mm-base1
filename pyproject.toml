@@ -1,6 +1,6 @@
 [project]
 name = "mm-base1"
-version = "0.0.1"
+version = "0.1.0"
 description = ""
 requires-python = ">=3.12"
 dependencies = [
@@ -13,8 +13,8 @@ dependencies = [
     "uvicorn[standard]~=0.30.0",
     "gunicorn~=22.0.0",
     "pyTelegramBotAPI~=4.21.0",
-    "mm-std~=0.0.1",
-    "mm-mongo~=0.0.1",
+    "mm-std~=0.1.0",
+    "mm-mongo~=0.1.0",
 ]
 [project.optional-dependencies]
 dev = [
