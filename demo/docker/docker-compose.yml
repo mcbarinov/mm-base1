@@ -1,8 +1,6 @@
-version: "3.8"
-
 services:
   app:
-    image: mm-b1-demo:latest
+    image: mm-base1-demo:latest
     environment:
       - APP_NAME=${APP_NAME}
       - DATABASE_URL=mongodb://root:secret@db/app?authSource=admin
@@ -29,8 +27,6 @@ services:
       interval: 10s
       timeout: 10s
       retries: 5
-
-
 
 volumes:
   db:

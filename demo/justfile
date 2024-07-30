@@ -2,8 +2,6 @@ set dotenv-load
 project_name := `grep APP_NAME .env | cut -d '=' -f 2-`
 version := `python -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])'`
 docker_registry := `grep DOCKER_REGISTRY .env | cut -d '=' -f2`
-netrc_path := `grep NETRC_PATH .env | cut -d '=' -f2`
-pipconf_path := `grep PIPCONF_PATH .env | cut -d '=' -f2`
 project_image := docker_registry+"/"+project_name
 
 default: dev
@@ -13,11 +11,11 @@ clean:
 
 pip-compile:
     rm -f requirements.txt requirements-dev.txt
-    uv pip compile -o requirements.txt --extra-index-url=$MM_PYPI pyproject.toml
-    uv pip compile -o requirements-dev.txt --extra=dev --extra-index-url=$MM_PYPI pyproject.toml
+    uv pip compile -o requirements.txt pyproject.toml
+    uv pip compile -o requirements-dev.txt --extra=dev pyproject.toml
 
 pip-sync:
-    uv pip sync --extra-index-url=$MM_PYPI requirements-dev.txt
+    uv pip sync requirements-dev.txt
     uv pip install -e .
 
 pip-upgrade: pip-compile pip-sync
@@ -45,7 +43,7 @@ docker-lint:
     hadolint --ignore DL3008 docker/Dockerfile
 
 docker-build: build docker-lint
-	docker build --platform linux/amd64 --secret id=netrc,src={{netrc_path}} --secret id=pipconf,src={{pipconf_path}} -t {{project_name}}:{{version}} --file docker/Dockerfile .
+	docker build --platform linux/amd64 -t {{project_name}}:{{version}} --file docker/Dockerfile .
 	docker tag {{project_name}}:{{version}} {{project_name}}:latest
 
 docker-compose: docker-build

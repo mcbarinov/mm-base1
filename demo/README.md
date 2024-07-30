@@ -1,4 +1,4 @@
-# mm-b1
+# mm-base1
 
 To build a docker it's necessary to give .netrc and pip.conf with access to the private pypi.
 

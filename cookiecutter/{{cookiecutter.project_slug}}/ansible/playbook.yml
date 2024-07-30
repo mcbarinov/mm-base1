@@ -1,5 +1,5 @@
 ---
-- name: Manage a mm-b1 app
+- name: Manage a mm-base1 app
   hosts: servers
   gather_facts: false
   roles:
