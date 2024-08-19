@@ -1,7 +1,7 @@
-from mm_base1.db import DatabaseAny
 from mm_mongo import MongoCollection
 
 from app.models import Data
+from mm_base1.db import DatabaseAny
 
 
 class DB:

@@ -1,8 +1,7 @@
 from dataclasses import dataclass
 
-from mm_base1.services.base import BaseService, BaseServiceParams
-
 from app.db import DB
+from mm_base1.services.base import BaseService, BaseServiceParams
 
 
 @dataclass

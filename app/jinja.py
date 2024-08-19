@@ -1,8 +1,8 @@
 from markupsafe import Markup
-from mm_base1.jinja import CustomJinja
 
 from app.app import App
 from app.models import DataStatus
+from mm_base1.jinja import CustomJinja
 
 
 def data_status(status: DataStatus) -> Markup:

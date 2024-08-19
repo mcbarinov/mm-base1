@@ -155,7 +155,6 @@ class Server:
                 domain=self.app.app_config.domain,
                 httponly=True,
                 max_age=60 * 60 * 24 * 30,
-                expires=60 * 60 * 24 * 30,
             )
             return response
 

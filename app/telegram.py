@@ -1,5 +1,6 @@
-from mm_base1.telegram import BaseTelegram
 from telebot.types import Message
+
+from mm_base1.telegram import BaseTelegram
 
 
 class Telegram(BaseTelegram):

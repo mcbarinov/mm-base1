@@ -1,10 +1,9 @@
-from mm_base1.jinja import Templates
-from mm_base1.server import Server
-
 from app.app import App
 from app.jinja import custom_jinja
 from app.routers import init_routers
 from app.telegram import Telegram
+from mm_base1.jinja import Templates
+from mm_base1.server import Server
 
 app: App = App()
 templates = Templates(app, custom_jinja)

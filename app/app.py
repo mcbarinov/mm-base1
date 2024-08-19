@@ -1,9 +1,8 @@
-from mm_base1.app import BaseApp
-
 from app.config import AppConfig, DConfigSettings, DValueSettings
 from app.db import DB
 from app.services.base import AppServiceParams
 from app.services.main_service import DataService
+from mm_base1.app import BaseApp
 
 
 class App(BaseApp):
