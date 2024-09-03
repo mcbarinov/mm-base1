@@ -1,4 +1,4 @@
-version := `python -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])'`
+version := `uv run python -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])'`
 
 
 default: dev
@@ -6,38 +6,29 @@ default: dev
 clean:
 	rm -rf .pytest_cache .ruff_cache .mypy_cache build dist *.egg-info
 
-pip-compile:
-    rm -f requirements.txt requirements-dev.txt
-    uv pip compile -o requirements.txt pyproject.toml
-    uv pip compile -o requirements-dev.txt --extra=dev pyproject.toml
-
-pip-sync:
-    uv pip sync requirements-dev.txt
-    uv pip install -e .
-
-pip-upgrade: pip-compile pip-sync
-    echo done
+sync:
+    uv sync
 
 build: clean lint audit test
-    python -m build
+    uvx --from build pyproject-build --installer uv
 
 format:
-    ruff check --select I --fix src app tests
-    ruff format src app tests
+    uv run ruff check --select I --fix src app tests
+    uv run ruff format src app tests
 
 lint: format
-    ruff check src app tests
-    mypy src app
+    uv run ruff check src app tests
+    uv run mypy src app
 
 audit:
-    pip-audit
-    bandit -r -c "pyproject.toml" src
+    uv run pip-audit
+    uv run bandit -r -c "pyproject.toml" src
 
 test:
-    pytest tests
+    uv run pytest tests
 
 publish: build cookiecutter
-    twine upload dist/**
+    uvx twine upload dist/**
     git tag -a 'v{{version}}' -m 'v{{version}}'
     git push origin v{{version}}
 
@@ -65,4 +56,4 @@ cookiecutter:
 
 
 dev:
-    uvicorn --reload --port 3000 --log-level warning app.main:server
+    uv run uvicorn --reload --port 3000 --log-level warning app.main:server

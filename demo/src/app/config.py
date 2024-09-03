@@ -34,3 +34,6 @@ class DValueSettings(DValueStorage):
     tmp2 = DV("bla")
     processed_block = DV(111, "bla bla about processed_block")
     last_checked_at = DV(None, "bla bla about last_checked_at", False)
+
+
+
