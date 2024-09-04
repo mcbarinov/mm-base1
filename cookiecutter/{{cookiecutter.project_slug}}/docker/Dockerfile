@@ -1,47 +1,47 @@
-# syntax=docker/dockerfile:1.3
+# syntax=docker/dockerfile:1.9
 FROM python:3.12.5 AS builder
 
-COPY --from=ghcr.io/astral-sh/uv:0.4.3 /uv /uvx /usr/local/bin/
+SHELL ["/bin/sh", "-exc"]
+WORKDIR /project
 
+# Setup uv
+COPY --from=ghcr.io/astral-sh/uv:0.4.4 /uv /uvx /usr/local/bin/
 ENV UV_LINK_MODE=copy \
     UV_COMPILE_BYTECODE=1 \
     UV_PYTHON_DOWNLOADS=never \
-    UV_PYTHON=python3.12
+    UV_PYTHON=python3.12 \
+    UV_PROJECT_ENVIRONMENT=/app
 
 # Create a virtual environment
-RUN --mount=type=cache,target=/root/.cache \
-    set -ex \
-    && uv venv /app/.venv
+RUN --mount=type=cache,target=/root/.cache uv venv $UV_PROJECT_ENVIRONMENT
 
 # Install dependencies
-COPY pyproject.toml uv.lock /app/
-RUN --mount=type=cache,target=/root/.cache \
-    set -ex \
-    && cd /app \
-    && uv sync --frozen --no-install-project --no-dev
+COPY pyproject.toml uv.lock /project/
+RUN --mount=type=cache,target=/root/.cache uv sync --frozen --no-install-project --no-dev
+
 
 # Build the project
-COPY src/ pyproject.toml uv.lock /code/
-RUN --mount=type=cache,target=/root/.cache/uv uvx --from build pyproject-build --installer uv -w -o /dist /code
+COPY src/ /project/
+RUN --mount=type=cache,target=/root/.cache/uv uvx --from build pyproject-build --installer uv -w -o /dist /project
 
 # Install the project package
-RUN --mount=type=cache,target=/root/.cache \
-    set -ex \
-    && uv pip install --python=/app/.venv --no-deps /dist/*.whl
+RUN --mount=type=cache,target=/root/.cache uv pip install --python=$UV_PROJECT_ENVIRONMENT --no-deps /dist/*.whl
+
 
 
 FROM python:3.12.5-slim
-ENV PATH="/app/.venv/bin:$PATH"
-EXPOSE 3000
+ENV PATH="/app/bin:$PATH"
 
-COPY --from=builder --chown=app:app /app/.venv /app/.venv
+# Create app user, group
+RUN <<EOT
+groupadd -r app
+useradd -r -d /app -g app -N app
+EOT
 
-RUN set -ex \
-    && groupadd -r app \
-    && useradd -r -d /app -g app -N app \
-    && mkdir /data \
-    && chown -R app:app /data
+COPY --from=builder --chown=app:app /app /app
+
+
 USER app
-
-
+WORKDIR /app
+EXPOSE 3000
 CMD ["gunicorn", "-b", "0.0.0.0:3000", "--timeout", "999", "--threads", "24", "-k", "uvicorn.workers.UvicornWorker", "app.main:server"]

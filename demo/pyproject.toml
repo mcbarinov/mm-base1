@@ -7,11 +7,9 @@ dependencies = [
     "mm-base1~=0.1.2",
 ]
 
-
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
-
 
 [tool.uv]
 dev-dependencies = [
@@ -28,7 +26,6 @@ dev-dependencies = [
     "types-PyYAML~=6.0.12.12",
 ]
 
-
 [tool.mypy]
 python_version = "3.12"
 implicit_reexport = true
@@ -41,7 +38,6 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 module = ["app.routers.*"]
 disable_error_code = ["no-untyped-def"]
-
 
 [tool.ruff]
 line-length = 130
@@ -68,7 +64,6 @@ lint.ignore = [
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
-
 
 [tool.bandit]
 exclude_dirs = ["tests"]

@@ -17,11 +17,9 @@ dependencies = [
     "mm-mongo~=0.1.0",
 ]
 
-
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
-
 
 [tool.uv]
 dev-dependencies = [
@@ -38,7 +36,6 @@ dev-dependencies = [
     "types-PyYAML~=6.0.12.12",
 ]
 
-
 [tool.mypy]
 python_version = "3.12"
 mypy_path = "stubs"
@@ -46,15 +43,12 @@ warn_no_return = false
 strict = true
 plugins = "pydantic.mypy"
 exclude = ["^tests/", "^cookiecutter", "^demo/"]
-
 [[tool.mypy.overrides]]
 module = ["wtforms.*", "telebot.types.*", "telebot.util.*"]
 ignore_missing_imports = true
-
 [[tool.mypy.overrides]]
 module = ["mm_b1.routers.*", "app.routers.*"]
 disable_error_code = ["no-untyped-def"]
-
 
 [tool.ruff]
 line-length = 130
@@ -84,11 +78,9 @@ respect-gitignore = false
 quote-style = "double"
 indent-style = "space"
 
-
 [tool.bandit]
 exclude_dirs = ["tests"]
 skips = ["B311"]
-
 
 [tool.pytest.ini_options]
 addopts = "-n auto"
