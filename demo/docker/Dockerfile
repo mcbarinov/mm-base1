@@ -5,7 +5,7 @@ SHELL ["/bin/sh", "-exc"]
 WORKDIR /project
 
 # Setup uv
-COPY --from=ghcr.io/astral-sh/uv:0.4.4 /uv /uvx /usr/local/bin/
+COPY --from=ghcr.io/astral-sh/uv:0.4.5 /uv /usr/local/bin/
 ENV UV_LINK_MODE=copy \
     UV_COMPILE_BYTECODE=1 \
     UV_PYTHON_DOWNLOADS=never \
@@ -22,7 +22,7 @@ RUN --mount=type=cache,target=/root/.cache uv sync --frozen --no-install-project
 
 # Build the project
 COPY src/ /project/
-RUN --mount=type=cache,target=/root/.cache/uv uvx --from build pyproject-build --installer uv -w -o /dist /project
+RUN --mount=type=cache,target=/root/.cache/uv uv build --wheel -o /dist /project
 
 # Install the project package
 RUN --mount=type=cache,target=/root/.cache uv pip install --python=$UV_PROJECT_ENVIRONMENT --no-deps /dist/*.whl

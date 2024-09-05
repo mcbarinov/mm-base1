@@ -4,13 +4,13 @@ version := `uv run python -c 'import tomllib; print(tomllib.load(open("pyproject
 default: dev
 
 clean:
-	rm -rf .pytest_cache .ruff_cache .mypy_cache build dist *.egg-info
+	rm -rf .pytest_cache .ruff_cache .mypy_cache build dist src/*.egg-info
 
 sync:
     uv sync
 
 build: clean lint audit test
-    uvx --from build pyproject-build --installer uv
+    uv build --wheel
 
 format:
     uv run ruff check --select I --fix src app tests
