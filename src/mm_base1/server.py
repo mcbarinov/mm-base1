@@ -1,10 +1,12 @@
 import traceback
-from collections.abc import Callable, Coroutine
+from collections.abc import AsyncGenerator, Callable, Coroutine
+from contextlib import asynccontextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 from fastapi import APIRouter, Depends, FastAPI, Form, HTTPException, Security
+from fastapi.applications import AppType
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.models import APIKey
 from fastapi.openapi.utils import get_openapi
@@ -22,6 +24,7 @@ from starlette.responses import (
 )
 from starlette.staticfiles import StaticFiles
 from starlette.status import HTTP_403_FORBIDDEN
+from starlette.types import Lifespan
 
 from mm_base1.app import BaseApp
 from mm_base1.errors import UserError
@@ -44,6 +47,17 @@ class AppRouter:
     prefix: str = ""
 
 
+def lifespan(app: BaseApp, telegram: BaseTelegram) -> Lifespan[AppType]:
+    @asynccontextmanager
+    async def lifespan_(_fastapi_app: FastAPI) -> AsyncGenerator[None, None]:
+        yield
+        app.logger.debug("server shutdown")
+        telegram.stop()
+        app.shutdown()
+
+    return lifespan_
+
+
 class Server:
     api_key_name = "access-token"
     key_query = Security(APIKeyQuery(name=api_key_name, auto_error=False))
@@ -60,6 +74,7 @@ class Server:
             openapi_url=None,
             openapi_tags=app.app_config.tags_metadata,
             middleware=[Middleware(SessionMiddleware, secret_key=self.app.app_config.access_token)],
+            lifespan=lifespan(app, telegram),
         )
         self.templates = templates
         self._configure_server()
@@ -107,11 +122,11 @@ class Server:
 
             return PlainTextResponse(message, status_code=500)
 
-        @self.server.on_event("shutdown")
-        def shutdown_server() -> None:
-            self.app.logger.debug("server shutdown")
-            self.telegram.stop()
-            self.app.shutdown()
+        # @self.server.on_event("shutdown")
+        # def shutdown_server() -> None:
+        #     self.app.logger.debug("server shutdown")
+        #     self.telegram.stop()
+        #     self.app.shutdown()
 
         current_dir = Path(__file__).parent.absolute()
         self.server.mount("/static", StaticFiles(directory=current_dir.joinpath("static")), name="static")
