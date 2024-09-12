@@ -5,7 +5,7 @@ SHELL ["/bin/sh", "-exc"]
 WORKDIR /project
 
 # Setup uv
-COPY --from=ghcr.io/astral-sh/uv:0.4.5 /uv /usr/local/bin/
+COPY --from=ghcr.io/astral-sh/uv:0.4.8 /uv /usr/local/bin/
 ENV UV_LINK_MODE=copy \
     UV_COMPILE_BYTECODE=1 \
     UV_PYTHON_DOWNLOADS=never \
@@ -19,7 +19,6 @@ RUN --mount=type=cache,target=/root/.cache uv venv $UV_PROJECT_ENVIRONMENT
 COPY pyproject.toml uv.lock /project/
 RUN --mount=type=cache,target=/root/.cache uv sync --frozen --no-install-project --no-dev
 
-
 # Build the project
 COPY src/ /project/
 RUN --mount=type=cache,target=/root/.cache/uv uv build --wheel -o /dist /project
@@ -28,18 +27,17 @@ RUN --mount=type=cache,target=/root/.cache/uv uv build --wheel -o /dist /project
 RUN --mount=type=cache,target=/root/.cache uv pip install --python=$UV_PROJECT_ENVIRONMENT --no-deps /dist/*.whl
 
 
-
 FROM python:3.12.5-slim
 ENV PATH="/app/bin:$PATH"
 
-# Create app user, group
 RUN <<EOT
 groupadd -r app
 useradd -r -d /app -g app -N app
+mkdir /data
+chown -R app:app /data
 EOT
 
 COPY --from=builder --chown=app:app /app /app
-
 
 USER app
 WORKDIR /app
