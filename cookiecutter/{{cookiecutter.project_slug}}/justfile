@@ -7,7 +7,7 @@ project_image := docker_registry+"/"+project_name
 default: dev
 
 clean:
-	rm -rf .pytest_cache .ruff_cache .mypy_cache build dist *.egg-info
+	rm -rf .pytest_cache .ruff_cache .mypy_cache build dist src/*.egg-info
 
 sync:
     uv sync
