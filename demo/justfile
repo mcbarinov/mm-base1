@@ -2,6 +2,7 @@ set dotenv-load
 project_name := `grep APP_NAME .env | cut -d '=' -f 2-`
 version := `uv run python -c 'import tomllib; print(tomllib.load(open("pyproject.toml", "rb"))["project"]["version"])'`
 docker_registry := `grep DOCKER_REGISTRY .env | cut -d '=' -f2`
+docker_build_platform := env_var_or_default("DOCKER_BUILD_PLATFORM", "linux/amd64")
 project_image := docker_registry+"/"+project_name
 
 default: dev
@@ -34,7 +35,7 @@ docker-lint:
     hadolint docker/Dockerfile
 
 docker-build:
-	docker build --platform linux/amd64 -t {{project_name}}:{{version}} --file docker/Dockerfile .
+	docker build --platform {{docker_build_platform}} -t {{project_name}}:{{version}} --file docker/Dockerfile .
 	docker tag {{project_name}}:{{version}} {{project_name}}:latest
 
 docker-compose: docker-build
