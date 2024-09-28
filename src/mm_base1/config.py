@@ -21,8 +21,8 @@ class BaseAppConfig(BaseSettings):
     database_url: str
     database_tz_aware: bool = True
     debug: bool = False
-    mm_b1_version: str = _get_package_version("mm-b1")
-    app_version: str = "unknown"
+    mm_b1_version: str = _get_package_version("mm-base1")
+    app_version: str = _get_package_version("app")
 
     tags: list[str] = Field(default_factory=list)
     main_menu: dict[str, str] = Field(default_factory=dict)

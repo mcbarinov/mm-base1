@@ -1,4 +1,3 @@
-import importlib.metadata
 from decimal import Decimal
 
 from mm_std import utc_now
@@ -9,15 +8,7 @@ from mm_base1.services.dconfig_service import DC, DConfigStorage
 from mm_base1.services.dvalue_service import DV, DValueStorage
 
 
-def _get_version() -> str:
-    try:
-        return importlib.metadata.version("app")
-    except importlib.metadata.PackageNotFoundError:
-        return " unknown"
-
-
 class AppConfig(BaseAppConfig):
-    app_version: str = _get_version()
     tags: list[str] = Field(["data"])
     main_menu: dict[str, str] = Field({"/data": "data"})
     telegram_bot_help: str = """
