@@ -147,8 +147,8 @@ class Templates:
         header_info = custom_jinja.header_info if custom_jinja.header_info else lambda _: Markup("")
         footer_info = custom_jinja.footer_info if custom_jinja.footer_info else lambda _: Markup("")
 
-        env.globals["header_info"] = partial(header_info, app)  # type: ignore[operator,misc, arg-type]
-        env.globals["footer_info"] = partial(footer_info, app)  # type: ignore[operator,misc, arg-type]
+        env.globals["header_info"] = partial(header_info, app)
+        env.globals["footer_info"] = partial(footer_info, app)
 
         env.globals["header_info_new_line"] = custom_jinja.header_info_new_line
 
@@ -170,4 +170,4 @@ def flash(request: Request, message: str, is_error: bool = False) -> None:
 
 
 def get_flash_messages(request: Request) -> list[dict[str, object]]:
-    return request.session.pop("_messages") if "_messages" in request.session else []  # type: ignore[no-any-return]
+    return request.session.pop("_messages") if "_messages" in request.session else []
