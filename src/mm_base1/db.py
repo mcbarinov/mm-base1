@@ -1,11 +1,6 @@
-from typing import TypeAlias
-
-from mm_mongo import MongoCollection
-from pymongo.database import Database
+from mm_mongo import DatabaseAny, MongoCollection
 
 from mm_base1.models import DConfig, DLog, DValue
-
-DatabaseAny: TypeAlias = Database[dict[str, object]]
 
 
 class BaseDB:

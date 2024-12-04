@@ -2,8 +2,8 @@ import os
 import threading
 import tracemalloc
 
+from mm_mongo import DatabaseAny
 from mm_std import Scheduler
-from pymongo.database import Database
 
 from app.config import AppConfig
 from mm_base1.services.dconfig_service import DConfigStorage
@@ -17,7 +17,7 @@ class SystemService:
         dconfig: DConfigStorage,
         dvalue: DValueStorage,
         scheduler: Scheduler,
-        database: Database[dict[str, object]],
+        database: DatabaseAny,
     ) -> None:
         self.app_config = app_config
         self.dconfig = dconfig

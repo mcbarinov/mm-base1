@@ -3,7 +3,7 @@ from __future__ import annotations
 import base64
 import itertools
 import pickle  # nosec
-from typing import ClassVar, Generic, TypeVar, cast, overload
+from typing import ClassVar, cast, overload
 
 import yaml
 from mm_mongo import MongoCollection
@@ -13,10 +13,8 @@ from mm_base1.errors import UnregisteredDValueError
 from mm_base1.models import DValue
 from mm_base1.utils import get_registered_attributes
 
-T = TypeVar("T")
 
-
-class DV(Generic[T]):
+class DV[T]:
     _counter = itertools.count()
 
     def __init__(self, value: T, description: str = "", persistent: bool = True) -> None:

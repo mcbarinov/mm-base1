@@ -49,7 +49,7 @@ class AppRouter:
 
 def lifespan(app: BaseApp, telegram: BaseTelegram) -> Lifespan[AppType]:
     @asynccontextmanager
-    async def lifespan_(_fastapi_app: FastAPI) -> AsyncGenerator[None, None]:
+    async def lifespan_(_fastapi_app: FastAPI) -> AsyncGenerator[None, None]:  # noqa: UP043
         yield
         app.logger.debug("server shutdown")
         telegram.stop()

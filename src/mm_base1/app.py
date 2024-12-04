@@ -12,7 +12,6 @@ from mm_std import (
 )
 
 from app.config import AppConfig, DConfigSettings, DValueSettings
-from mm_base1.db import DatabaseAny
 from mm_base1.models import DConfig, DLog, DValue
 from mm_base1.services.base import BaseServiceParams
 from mm_base1.services.dconfig_service import DConfigService
@@ -36,7 +35,7 @@ class BaseApp:
         )
         conn = MongoConnection.connect(app_config.database_url, app_config.database_tz_aware)
         self.mongo_client = conn.client
-        self.database: DatabaseAny = conn.database
+        self.database = conn.database
         self.dconfig_collection: MongoCollection[DConfig] = DConfig.init_collection(self.database)
         self.dvalue_collection: MongoCollection[DValue] = DValue.init_collection(self.database)
         self.dlog_collection: MongoCollection[DLog] = DLog.init_collection(self.database)

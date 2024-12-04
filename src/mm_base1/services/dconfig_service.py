@@ -4,7 +4,7 @@ import itertools
 from collections.abc import Callable
 from dataclasses import dataclass
 from decimal import Decimal
-from typing import Any, ClassVar, Generic, TypeVar, cast, overload
+from typing import Any, ClassVar, cast, overload
 
 import pydash
 import yaml
@@ -15,10 +15,8 @@ from mm_base1.errors import UnregisteredDConfigError
 from mm_base1.models import DConfig, DConfigType
 from mm_base1.utils import get_registered_attributes
 
-T = TypeVar("T", str, bool, int, float, Decimal)
 
-
-class DC(Generic[T]):
+class DC[T: (str, bool, int, float, Decimal)]:
     _counter = itertools.count()
 
     def __init__(self, value: T, description: str = "", hide: bool = False) -> None:

@@ -9,9 +9,7 @@ class App(BaseApp):
     def __init__(self) -> None:
         super().__init__(AppConfig(), DConfigSettings(), DValueSettings())
         self.db = DB(self.database)
-        # services
         self.data_service = DataService(self.base_params)
-        # scheduler
         self.scheduler.add_job(self.data_service.generate_data, 6000)
 
         self.startup()

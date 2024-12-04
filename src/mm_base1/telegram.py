@@ -1,7 +1,7 @@
 import functools
 from collections.abc import Callable
 from threading import Thread
-from typing import Any, TypeAlias
+from typing import Any
 
 from mm_std import synchronized
 from telebot import TeleBot
@@ -10,7 +10,7 @@ from telebot.util import split_string
 
 from app.app import App
 
-CallableAny: TypeAlias = Callable[..., Any]
+type CallableAny = Callable[..., Any]
 
 
 class BaseTelegram:
