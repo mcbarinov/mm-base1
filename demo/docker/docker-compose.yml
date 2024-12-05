@@ -1,6 +1,8 @@
 services:
   app:
-    image: mm-base1-demo:latest
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
     environment:
       - APP_NAME=${APP_NAME}
       - DATABASE_URL=mongodb://root:secret@db/app?authSource=admin
