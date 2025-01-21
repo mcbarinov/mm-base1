@@ -8,8 +8,8 @@ from mm_std import (
     Result,
     Scheduler,
     init_logger,
-    send_telegram_message,
 )
+from mm_telegram import send_telegram_message
 
 from app.config import AppConfig, DConfigSettings, DValueSettings
 from mm_base1.models import DConfig, DLog, DValue
