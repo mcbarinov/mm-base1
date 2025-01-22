@@ -26,7 +26,7 @@ class BaseApp:
         dconfig_settings: DConfigSettings,
         dvalue_settings: DValueSettings,
         debug_scheduler: bool = False,
-    ):
+    ) -> None:
         self.app_config = app_config
         self.logger = init_logger(
             "app",

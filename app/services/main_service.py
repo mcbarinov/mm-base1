@@ -10,7 +10,7 @@ from app.services.base import AppService, AppServiceParams
 
 
 class DataService(AppService):
-    def __init__(self, base_params: AppServiceParams):
+    def __init__(self, base_params: AppServiceParams) -> None:
         super().__init__(base_params)
 
     def generate_data(self) -> InsertOneResult:
@@ -22,9 +22,11 @@ class DataService(AppService):
         return self.db.data.insert_one(Data(status=status, value=value))
 
     def generate_many(self) -> InsertManyResult:
-        new_data_list = []
-        for _ in range(10):
-            new_data_list.append(Data(status=random.choice(list(DataStatus)), value=random.randint(0, 1_000_000)))
+        # new_data_list = []
+        # for _ in range(10):
+        #     new_data_list.append(Data(status=random.choice(list(DataStatus)), value=random.randint(0, 1_000_000)))
+        #
+        new_data_list = [Data(status=random.choice(list(DataStatus)), value=random.randint(0, 1_000_000)) for _ in range(10)]
         return self.db.data.insert_many(new_data_list)
 
     def test_typings(self) -> dict[str, object]:

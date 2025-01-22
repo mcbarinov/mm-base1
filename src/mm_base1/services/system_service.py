@@ -1,4 +1,3 @@
-import os
 import threading
 import tracemalloc
 
@@ -22,17 +21,15 @@ class SystemService:
         self.app_config = app_config
         self.dconfig = dconfig
         self.dvalue = dvalue
-        self.logfile = self.app_config.data_dir + "/app.log"
+        self.logfile = self.app_config.data_dir / "app.log"
         self.scheduler = scheduler
         self.database = database
 
     def read_logfile(self) -> str:
-        with open(self.logfile, encoding="utf-8") as f:
-            return f.read()
+        return self.logfile.read_text(encoding="utf-8")
 
     def clean_logfile(self) -> None:
-        with open(self.logfile, "w", encoding="utf-8") as f:
-            f.write("")
+        self.logfile.write_text("")
 
     def get_stats(self) -> dict[str, object]:
         threads = []
@@ -49,7 +46,7 @@ class SystemService:
 
         return {
             "db": db_stats,
-            "logfile": os.path.getsize(self.logfile),
+            "logfile": self.logfile.stat().st_size,
             "dconfig": len(self.dconfig.keys()),
             "dvalue": len(self.dvalue.keys()),
             "dlog": self.database["dlog"].count_documents({}),

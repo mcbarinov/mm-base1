@@ -19,7 +19,7 @@ class BaseServiceParams:
 
 
 class BaseService:
-    def __init__(self, params: BaseServiceParams):
+    def __init__(self, params: BaseServiceParams) -> None:
         self.app_config = params.app_config
         self.logger = params.logger
         self.dconfig = params.dconfig

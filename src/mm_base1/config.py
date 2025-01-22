@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.metadata
+from pathlib import Path  # noqa: TC003 otherwise pydantic doesn't work
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -15,7 +16,7 @@ def _get_package_version(package: str) -> str:
 
 class BaseAppConfig(BaseSettings):
     app_name: str
-    data_dir: str
+    data_dir: Path
     access_token: str
     domain: str
     database_url: str

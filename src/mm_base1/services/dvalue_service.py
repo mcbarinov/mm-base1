@@ -3,15 +3,17 @@ from __future__ import annotations
 import base64
 import itertools
 import pickle  # nosec
-from typing import ClassVar, cast, overload
+from typing import TYPE_CHECKING, ClassVar, cast, overload
 
 import yaml
-from mm_mongo import MongoCollection
 from mm_std import synchronized, utc_now
 
 from mm_base1.errors import UnregisteredDValueError
 from mm_base1.models import DValue
 from mm_base1.utils import get_registered_attributes
+
+if TYPE_CHECKING:
+    from mm_mongo import MongoCollection
 
 
 class DV[T]:
@@ -135,4 +137,4 @@ class DValueService:
 
     @staticmethod
     def decode_value(value: str) -> object:
-        return pickle.loads(base64.b64decode(value))  # nosec
+        return pickle.loads(base64.b64decode(value))  # noqa: S301 # nosec

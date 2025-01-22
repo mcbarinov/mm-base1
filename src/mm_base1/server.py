@@ -3,7 +3,7 @@ from collections.abc import AsyncGenerator, Callable, Coroutine
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, FastAPI, Form, HTTPException, Security
 from fastapi.applications import AppType
@@ -64,7 +64,7 @@ class Server:
     key_header = Security(APIKeyHeader(name=api_key_name, auto_error=False))
     key_cookie = Security(APIKeyCookie(name=api_key_name, auto_error=False))
 
-    def __init__(self, app: BaseApp, telegram: BaseTelegram, routers: list[AppRouter], templates: Templates):
+    def __init__(self, app: BaseApp, telegram: BaseTelegram, routers: list[AppRouter], templates: Templates) -> None:
         self.app = app
         self.telegram = telegram
         self.server = FastAPI(
@@ -122,19 +122,13 @@ class Server:
 
             return PlainTextResponse(message, status_code=500)
 
-        # @self.server.on_event("shutdown")
-        # def shutdown_server() -> None:
-        #     self.app.logger.debug("server shutdown")
-        #     self.telegram.stop()
-        #     self.app.shutdown()
-
         current_dir = Path(__file__).parent.absolute()
         self.server.mount("/static", StaticFiles(directory=current_dir.joinpath("static")), name="static")
         add_custom_encodings()
 
     def _configure_openapi(self) -> None:
         @self.server.get("/openapi.json", tags=["openapi"], include_in_schema=False)
-        async def get_open_api_endpoint(_api_key: APIKey = Depends(self._get_api_key())) -> JSONResponse:
+        async def get_open_api_endpoint(_api_key: Annotated[APIKey, Depends(self._get_api_key())]) -> JSONResponse:
             return JSONResponse(
                 get_openapi(
                     title=self.app.app_config.app_name,
@@ -145,7 +139,7 @@ class Server:
             )
 
         @self.server.get("/api", tags=["openapi"], include_in_schema=False)
-        async def get_documentation(api_key: APIKey = Depends(self._get_api_key())) -> HTMLResponse:
+        async def get_documentation(api_key: Annotated[APIKey, Depends(self._get_api_key())]) -> HTMLResponse:
             response = get_swagger_ui_html(openapi_url="/openapi.json", title=self.app.app_config.app_name)
             response.set_cookie(
                 self.api_key_name,
@@ -180,11 +174,11 @@ class Server:
             return response
 
         @self.server.get("/api-post/{url:path}")
-        def api_post(url: str, request: Request, api_key: APIKey = Depends(self._get_api_key())) -> object:
+        def api_post(url: str, request: Request, api_key: Annotated[APIKey, Depends(self._get_api_key())]) -> object:
             return self._api_method("post", url, request, api_key)
 
         @self.server.get("/api-delete/{url:path}")
-        def api_delete(url: str, request: Request, api_key: APIKey = Depends(self._get_api_key())) -> object:
+        def api_delete(url: str, request: Request, api_key: Annotated[APIKey, Depends(self._get_api_key())]) -> object:
             return self._api_method("delete", url, request, api_key)
 
     def _api_method(self, method: str, url: str, req: Request, api_key: APIKey) -> object:

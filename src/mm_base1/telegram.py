@@ -17,7 +17,7 @@ class BaseTelegram:
     """Telegram is an alternative UI to the web API for the project. It works via telegram commands.
     If you need just to send a message to the project channel / group, use core.send_telegram_message()"""
 
-    def __init__(self, app: App):
+    def __init__(self, app: App) -> None:
         self.app = app
         self.bot: TeleBot | None = None
         self.is_started = False
@@ -37,7 +37,7 @@ class BaseTelegram:
         try:
             self.admins = []
             for admin in self.app.dconfig.get("telegram_admins", "").split(","):  # type: ignore[attr-defined]
-                admin = admin.strip()
+                admin = admin.strip()  # noqa: PLW2901
                 if admin:
                     self.admins.append(int(admin))
         except Exception as err:
@@ -62,7 +62,7 @@ class BaseTelegram:
         except Exception as e:
             self.is_started = False
             self.app.dlog("telegram_polling", {"error": str(e)})
-            self.app.logger.error("telegram polling: %s", e)
+            self.app.logger.exception("telegram polling")
 
     @synchronized
     def stop(self) -> None:
@@ -73,7 +73,7 @@ class BaseTelegram:
 
     def _init_base_commands(self) -> None:
         if self.bot is None:
-            return None
+            return
 
         @self.bot.message_handler(commands=["start", "help"])  # type: ignore[misc]
         @self.auth(admins=self.admins, bot=self.bot)
@@ -91,10 +91,10 @@ class BaseTelegram:
 
     def _send_message(self, chat_id: int, message: str) -> None:
         for text in split_string(message, 4096):
-            self.bot.send_message(chat_id, text)  # type:ignore
+            self.bot.send_message(chat_id, text)  # type: ignore[union-attr]
 
     def send_to_channel(self, message: str) -> None:
-        self._send_message(self.app.dconfig.get("telegram_chat_id"), message)  # type:ignore
+        self._send_message(self.app.dconfig.get("telegram_chat_id"), message)  # type: ignore[arg-type]
 
     @staticmethod
     def auth(*, admins: list[int], bot: TeleBot) -> Callable[..., Any]:

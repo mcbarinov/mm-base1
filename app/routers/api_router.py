@@ -1,4 +1,5 @@
 from decimal import Decimal
+from typing import Annotated
 
 from bson import ObjectId
 from fastapi import APIRouter, File, UploadFile
@@ -18,9 +19,8 @@ def init(app: App) -> APIRouter:
         return app.db.data.find(mongo_query(worker=worker, status=status), "-created_at", limit)
 
     @router.post("/data/upload")
-    async def upload_file(file: UploadFile = File(...)):
-        data = await file.read()
-        return data
+    async def upload_file(file: Annotated[UploadFile, File()]):
+        return await file.read()
 
     @router.post("/data/generate")
     def generate_data():
@@ -55,5 +55,9 @@ def init(app: App) -> APIRouter:
     @router.post("/test-post-plain-text", response_class=PlainTextResponse)
     def text_post_plain_text():
         return "a\nb\nc\n"
+
+    @router.get("/exception")
+    def exception():
+        raise RuntimeError("test runtime exception")
 
     return router

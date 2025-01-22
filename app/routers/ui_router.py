@@ -9,7 +9,7 @@ from app.models import DataStatus
 from mm_base1.jinja import Templates, form_choices
 
 
-class DataFilterForm(Form):  # type: ignore
+class DataFilterForm(Form):  # type: ignore[misc]
     status = SelectField(choices=form_choices(DataStatus, title="status"), default="")
     limit = IntegerField(default=100)
 

@@ -1,19 +1,22 @@
 from __future__ import annotations
 
 import itertools
-from collections.abc import Callable
 from dataclasses import dataclass
 from decimal import Decimal
-from typing import Any, ClassVar, cast, overload
+from typing import TYPE_CHECKING, Any, ClassVar, cast, overload
 
 import pydash
 import yaml
-from mm_mongo import MongoCollection
 from mm_std import Err, Ok, Result, synchronized, utc_now
 
 from mm_base1.errors import UnregisteredDConfigError
 from mm_base1.models import DConfig, DConfigType
 from mm_base1.utils import get_registered_attributes
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from mm_mongo import MongoCollection
 
 
 class DC[T: (str, bool, int, float, Decimal)]:
@@ -133,9 +136,9 @@ class DConfigService:
     @classmethod
     def update(cls, data: dict[str, str]) -> bool:
         result = True
-        for key, str_value in data.items():
+        for key in data:
             if key in cls.dconfig_storage:
-                str_value = str_value or ""  # for BOOLEAN type (checkbox)
+                str_value = data.get(key) or ""  # for BOOLEAN type (checkbox)
                 str_value = str_value.replace("\r", "")  # for MULTILINE (textarea do it)
                 type_value_res = cls.get_typed_value(cls.dconfig_storage.types[key], str_value.strip())
                 if isinstance(type_value_res, Ok):
@@ -194,7 +197,7 @@ class DConfigService:
             return Err(str(e))
 
     @staticmethod
-    def get_str_value(type_: DConfigType, value: Any) -> str:
+    def get_str_value(type_: DConfigType, value: object) -> str:
         if type_ is DConfigType.BOOLEAN:
             return "True" if value else ""
         return str(value)

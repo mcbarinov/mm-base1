@@ -31,7 +31,7 @@ def timestamp(value: datetime | int | None, format_: str = "%Y-%m-%d %H:%M:%S") 
     if isinstance(value, datetime):
         return value.strftime(format_)
     if isinstance(value, int):
-        return datetime.fromtimestamp(value).strftime(format_)
+        return datetime.fromtimestamp(value).strftime(format_)  # noqa: DTZ006
     return ""
 
 
@@ -54,10 +54,7 @@ def yes_no(
         value = "on" if on_off else "yes"
         clr = "green"
     elif value is False:
-        if hide_no:
-            value = ""
-        else:
-            value = "off" if on_off else "no"
+        value = "" if hide_no else "off" if on_off else "no"
         clr = "red"
     elif value is None:
         value = ""
@@ -71,7 +68,7 @@ def json_url_encode(data: dict[str, object]) -> str:
 
 
 def nformat(
-    value: str | int | float | Decimal | None,
+    value: str | float | Decimal | None,
     prefix: str = "",
     suffix: str = "",
     separator: str = "",
@@ -103,11 +100,9 @@ def form_choices(choices: list[str] | type[Enum], title: str = "") -> list[tuple
     if title:
         result.append(("", title + "..."))
     if isinstance(choices, list):
-        for value in choices:
-            result.append((value, value))
+        result.extend([(value, value) for value in choices])
     else:
-        for value in [e.value for e in choices]:
-            result.append((value, value))
+        result.extend([(e.value, e.value) for e in choices])
     return result
 
 
@@ -121,8 +116,8 @@ class CustomJinja:
 
 
 class Templates:
-    def __init__(self, app: BaseApp, custom_jinja: CustomJinja):
-        env = Environment(loader=ChoiceLoader([PackageLoader("mm_base1"), PackageLoader("app")]))  # nosec
+    def __init__(self, app: BaseApp, custom_jinja: CustomJinja) -> None:
+        env = Environment(loader=ChoiceLoader([PackageLoader("mm_base1"), PackageLoader("app")]), autoescape=True)  # nosec
         env.globals["get_flash_messages"] = get_flash_messages
         env.filters["timestamp"] = timestamp
         env.filters["dt"] = timestamp

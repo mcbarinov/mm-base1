@@ -4,5 +4,5 @@ from app.models import Data
 
 
 class DB:
-    def __init__(self, database: DatabaseAny):
+    def __init__(self, database: DatabaseAny) -> None:
         self.data: MongoCollection[Data] = Data.init_collection(database)
