@@ -1,6 +1,6 @@
 [project]
 name = "mm-base1"
-version = "0.1.9"
+version = "0.1.10"
 description = ""
 requires-python = ">=3.13"
 dependencies = [
@@ -11,8 +11,8 @@ dependencies = [
     "itsdangerous~=2.2.0",
     "WTForms~=3.2.1",
     "gunicorn~=23.0.0",
-    "pyTelegramBotAPI~=4.24.0",
-    "python-multipart==0.0.19", # delete dep after fastapi upgrade
+    "pyTelegramBotAPI~=4.26.0",
+    "python-multipart==0.0.20", # delete dep after fastapi upgrade
     "jinja2~=3.1.5",
 ]
 
@@ -52,6 +52,7 @@ target-version = "py313"
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
+    "TC", # flake8-type-checking, TYPE_CHECKING is dangerous, for example it doesn't work with pydantic
     "A005", # flake8-builtins: stdlib-module-shadowing
     "ERA001", # eradicate: commented-out-code
     "PT", # flake8-pytest-style

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import importlib.metadata
-from pathlib import Path  # noqa: TC003 otherwise pydantic doesn't work
+from pathlib import Path
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict

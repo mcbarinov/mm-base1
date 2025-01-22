@@ -1,11 +1,7 @@
-from typing import TYPE_CHECKING
-
 from mm_base1.db import BaseDB, DatabaseAny
+from mm_mongo import MongoCollection
 
 from app.models import Data
-
-if TYPE_CHECKING:
-    from mm_mongo import MongoCollection
 
 
 class DB(BaseDB):

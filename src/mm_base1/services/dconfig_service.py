@@ -1,22 +1,19 @@
 from __future__ import annotations
 
 import itertools
+from collections.abc import Callable
 from dataclasses import dataclass
 from decimal import Decimal
-from typing import TYPE_CHECKING, Any, ClassVar, cast, overload
+from typing import Any, ClassVar, cast, overload
 
 import pydash
 import yaml
+from mm_mongo import MongoCollection
 from mm_std import Err, Ok, Result, synchronized, utc_now
 
 from mm_base1.errors import UnregisteredDConfigError
 from mm_base1.models import DConfig, DConfigType
 from mm_base1.utils import get_registered_attributes
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
-
-    from mm_mongo import MongoCollection
 
 
 class DC[T: (str, bool, int, float, Decimal)]:
