@@ -4,7 +4,7 @@ from telebot.types import Message
 
 class Telegram(BaseTelegram):
     def init_commands(self) -> None:
-        @self.bot.message_handler(commands=["ping2"])  # type: ignore
+        @self.bot.message_handler(commands=["ping2"])  # type: ignore[union-attr, misc]
         @self.auth(admins=self.admins, bot=self.bot)
         def ping_handler(message: Message) -> None:
             text = message.text.replace("/ping2", "").strip()

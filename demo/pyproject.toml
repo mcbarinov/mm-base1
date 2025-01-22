@@ -59,12 +59,14 @@ ignore = [
     "TD002", # flake8-todos: missing-todo-author
     "TD003", # flake8-todos: missing-todo-link
     "RET503", # flake8-return: implicit-return
+    "RUF012", # ruff: mutable-class-default
     "COM812", # it's used in ruff formatter
 ]
 [tool.ruff.lint.pep8-naming]
 classmethod-decorators = ["field_validator"]
 [tool.ruff.lint.per-file-ignores]
 "tests/*.py" = ["ANN", "S"]
+"src/app/routers/*.py" = ["ANN"]
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"

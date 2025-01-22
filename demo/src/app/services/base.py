@@ -12,6 +12,6 @@ class AppServiceParams:
 
 
 class AppService(BaseService):
-    def __init__(self, app_service_params: AppServiceParams):
+    def __init__(self, app_service_params: AppServiceParams) -> None:
         super().__init__(app_service_params.base_params)
         self.db = app_service_params.db
