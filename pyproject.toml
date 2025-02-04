@@ -1,8 +1,8 @@
 [project]
 name = "mm-base1"
-version = "0.1.11"
+version = "0.1.12"
 description = ""
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = [
     "mm-mongo~=0.1.8",
     "mm-telegram~=0.0.4",

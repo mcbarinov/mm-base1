@@ -27,7 +27,7 @@ audit:
 test:
     uv run pytest tests
 
-publish: build cookiecutter
+publish: build
     git diff-index --quiet HEAD
     uvx twine upload dist/**
     git tag -a 'v{{version}}' -m 'v{{version}}'
