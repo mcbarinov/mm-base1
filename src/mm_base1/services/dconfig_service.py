@@ -86,14 +86,14 @@ class DConfigInitValue:
 
 class DConfigService:
     dconfig_storage = DConfigStorage()
-    dconfig_collection: MongoCollection[DConfig]
+    dconfig_collection: MongoCollection[str, DConfig]
     dlog: Callable[[str, object], None]
 
     @classmethod
     @synchronized
     def init_storage(
         cls,
-        dconfig_collection: MongoCollection[DConfig],
+        dconfig_collection: MongoCollection[str, DConfig],
         dconfig_settings: DConfigStorage,
         dlog: Callable[[str, object], None],
     ) -> DConfigStorage:
@@ -116,7 +116,7 @@ class DConfigService:
                     cls.dlog("dconfig.get_typed_value", {"error": typed_value_res.err, "attr": attr.key})
             else:  # create rows if not exists
                 cls.dconfig_collection.insert_one(
-                    DConfig(_id=attr.key, type=type_, value=cls.get_str_value(type_, attr.value)),
+                    DConfig(id=attr.key, type=type_, value=cls.get_str_value(type_, attr.value)),
                 )
                 cls.dconfig_storage[attr.key] = attr.value
 
@@ -127,7 +127,7 @@ class DConfigService:
     @classmethod
     def update_multiline(cls, key: str, value: str) -> None:
         value = value.replace("\r", "")
-        cls.dconfig_collection.update_by_id(key, {"$set": {"value": value, "updated_at": utc_now()}})
+        cls.dconfig_collection.set(key, {"value": value, "updated_at": utc_now()})
         cls.dconfig_storage[key] = value
 
     @classmethod
@@ -139,7 +139,7 @@ class DConfigService:
                 str_value = str_value.replace("\r", "")  # for MULTILINE (textarea do it)
                 type_value_res = cls.get_typed_value(cls.dconfig_storage.types[key], str_value.strip())
                 if isinstance(type_value_res, Ok):
-                    cls.dconfig_collection.update_by_id(key, {"$set": {"value": str_value, "updated_at": utc_now()}})
+                    cls.dconfig_collection.set(key, {"value": str_value, "updated_at": utc_now()})
                     cls.dconfig_storage[key] = type_value_res.ok
                 else:
                     cls.dlog("dconfig_service_update", {"error": type_value_res.err, "key": key})

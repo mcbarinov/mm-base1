@@ -1,3 +1,4 @@
+from bson import ObjectId
 from fastapi import APIRouter
 from mm_mongo import mongo_query
 from pymongo.results import DeleteResult
@@ -18,12 +19,12 @@ def init(app: BaseApp) -> APIRouter:
         return app.dlog_collection.delete_many({})
 
     @router.get("/{pk}")
-    def get_dlog(pk: str) -> DLog:
+    def get_dlog(pk: ObjectId) -> DLog:
         return app.dlog_collection.get(pk)
 
     @router.delete("/{pk}", response_model=None)
-    def delete_dlog(pk: str) -> DeleteResult:
-        return app.dlog_collection.delete_by_id(pk)
+    def delete_dlog(pk: ObjectId) -> DeleteResult:
+        return app.dlog_collection.delete(pk)
 
     @router.delete("/category/{category}", response_model=None)
     def delete_by_category(category: str) -> DeleteResult:

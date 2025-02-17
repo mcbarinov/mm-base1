@@ -27,16 +27,16 @@ def init(app: App) -> APIRouter:
         return app.data_service.generate_data()
 
     @router.get("/data/{pk}")
-    def get_data(pk: str):
+    def get_data(pk: ObjectId):
         return app.db.data.get_or_none(pk)
 
     @router.post("/data/{pk}/inc")
-    def inc_data(pk: str, value: int | None = None):
-        return app.db.data.update_by_id(pk, {"$inc": {"value": value or 1}})
+    def inc_data(pk: ObjectId, value: int | None = None):
+        return app.db.data.update(pk, {"$inc": {"value": value or 1}})
 
     @router.delete("/data/{pk}")
-    def delete_data(pk: str):
-        return app.db.data.delete_by_id(pk)
+    def delete_data(pk: ObjectId):
+        return app.db.data.delete(pk)
 
     @router.get("/test")
     def test_all():

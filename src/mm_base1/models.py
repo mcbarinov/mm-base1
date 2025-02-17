@@ -2,7 +2,8 @@ from datetime import datetime
 from enum import Enum, unique
 from typing import ClassVar
 
-from mm_mongo import MongoModel, ObjectIdStr
+from bson import ObjectId
+from mm_mongo import MongoModel
 from mm_std import utc_now
 from pydantic import Field
 
@@ -18,14 +19,13 @@ class DConfigType(str, Enum):
     DECIMAL = "DECIMAL"
 
 
-class DConfig(MongoModel):
-    id: str = Field(..., alias="_id")
+class DConfig(MongoModel[str]):
     type: DConfigType
     value: str
     updated_at: datetime | None = None
     created_at: datetime = Field(default_factory=utc_now)
 
-    __collection__ = "dconfig"
+    __collection__: str = "dconfig"
     __validator__: ClassVar[dict[str, object]] = {
         "$jsonSchema": {
             "required": ["type", "value", "updated_at", "created_at"],
@@ -41,8 +41,7 @@ class DConfig(MongoModel):
     }
 
 
-class DValue(MongoModel):
-    id: str = Field(..., alias="_id")
+class DValue(MongoModel[str]):
     value: str
     updated_at: datetime | None = None
     created_at: datetime = Field(default_factory=utc_now)
@@ -62,13 +61,12 @@ class DValue(MongoModel):
     }
 
 
-class DLog(MongoModel):
-    id: ObjectIdStr | None = Field(None, alias="_id")
+class DLog(MongoModel[ObjectId]):
     category: str
     data: object
     created_at: datetime = Field(default_factory=utc_now)
 
-    __collection__ = "dlog"
+    __collection__: str = "dlog"
     __indexes__ = "category, created_at"
     __validator__: ClassVar[dict[str, object]] = {
         "$jsonSchema": {

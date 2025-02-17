@@ -1,10 +1,10 @@
 [project]
 name = "mm-base1"
-version = "0.1.13"
+version = "0.2a1"
 description = ""
 requires-python = ">=3.12"
 dependencies = [
-    "mm-mongo~=0.1.9",
+    "mm-mongo~=0.2a5",
     "mm-telegram~=0.0.4",
     "fastapi[all]~=0.115.8",
     "aiofiles~=24.1.0",
@@ -26,7 +26,7 @@ dev-dependencies = [
     "pytest-httpserver~=1.1.1",
     "ruff~=0.9.6",
     "pip-audit~=2.8.0",
-    "bandit~=1.8.2",
+    "bandit~=1.8.3",
     "mypy~=1.15.0",
     "types-PyYAML~=6.0.12.20241230",
 ]
@@ -48,31 +48,32 @@ disable_error_code = ["no-untyped-def"]
 [tool.ruff]
 line-length = 130
 target-version = "py313"
+exclude = ["demo/", "cookiecutter/"]
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-    "TC", # flake8-type-checking, TYPE_CHECKING is dangerous, for example it doesn't work with pydantic
-    "A005", # flake8-builtins: stdlib-module-shadowing
-    "ERA001", # eradicate: commented-out-code
-    "PT", # flake8-pytest-style
-    "D", # pydocstyle
-    "FIX", # flake8-fixme
+    "TC",      # flake8-type-checking, TYPE_CHECKING is dangerous, for example it doesn't work with pydantic
+    "A005",    # flake8-builtins: stdlib-module-shadowing
+    "ERA001",  # eradicate: commented-out-code
+    "PT",      # flake8-pytest-style
+    "D",       # pydocstyle
+    "FIX",     # flake8-fixme
     "PLR0911", # pylint: too-many-return-statements
     "PLR0912", # pylint: too-many-branches
     "PLR0913", # pylint: too-many-arguments
     "PLR2004", # pylint: magic-value-comparison
     "PLC0414", # pylint: useless-import-alias
-    "FBT", # flake8-boolean-trap
-    "EM", # flake8-errmsg
-    "TRY003", # tryceratops: raise-vanilla-args
-    "C901", # mccabe: complex-structure,
-    "BLE001", # flake8-blind-except
-    "S311", # bandit: suspicious-non-cryptographic-random-usage
-    "TD002", # flake8-todos: missing-todo-author
-    "TD003", # flake8-todos: missing-todo-link
-    "RET503", # flake8-return: implicit-return
-    "RUF012", # ruff: mutable-class-default
-    "COM812", # it's used in ruff formatter
+    "FBT",     # flake8-boolean-trap
+    "EM",      # flake8-errmsg
+    "TRY003",  # tryceratops: raise-vanilla-args
+    "C901",    # mccabe: complex-structure,
+    "BLE001",  # flake8-blind-except
+    "S311",    # bandit: suspicious-non-cryptographic-random-usage
+    "TD002",   # flake8-todos: missing-todo-author
+    "TD003",   # flake8-todos: missing-todo-link
+    "RET503",  # flake8-return: implicit-return
+    "RUF012",  # ruff: mutable-class-default
+    "COM812",  # it's used in ruff formatter
 ]
 [tool.ruff.lint.pep8-naming]
 classmethod-decorators = ["field_validator"]

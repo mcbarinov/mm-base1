@@ -2,6 +2,7 @@ import logging
 import os
 from typing import cast
 
+from bson import ObjectId
 from mm_mongo import MongoCollection, MongoConnection
 from mm_std import (
     Err,
@@ -33,12 +34,12 @@ class BaseApp:
             file_path=f"{app_config.data_dir}/app.log",
             level=logging.DEBUG if self.app_config.debug else logging.INFO,
         )
-        conn = MongoConnection.connect(app_config.database_url, app_config.database_tz_aware)
+        conn = MongoConnection.connect(app_config.database_url)
         self.mongo_client = conn.client
         self.database = conn.database
-        self.dconfig_collection: MongoCollection[DConfig] = DConfig.init_collection(self.database)
-        self.dvalue_collection: MongoCollection[DValue] = DValue.init_collection(self.database)
-        self.dlog_collection: MongoCollection[DLog] = DLog.init_collection(self.database)
+        self.dconfig_collection: MongoCollection[str, DConfig] = MongoCollection(self.database, DConfig)
+        self.dvalue_collection: MongoCollection[str, DValue] = MongoCollection(self.database, DValue)
+        self.dlog_collection: MongoCollection[ObjectId, DLog] = MongoCollection(self.database, DLog)
         self.dconfig: DConfigSettings = DConfigService.init_storage(self.dconfig_collection, dconfig_settings, self.dlog)  # type:ignore[assignment]
         self.dvalue: DValueSettings = DValueService.init_storage(self.dvalue_collection, dvalue_settings)  # type:ignore[assignment]
         self.scheduler = Scheduler(self.logger, debug=debug_scheduler)
@@ -48,7 +49,7 @@ class BaseApp:
 
     def dlog(self, category: str, data: object = None) -> None:
         self.logger.debug("dlog %s %s", category, data)
-        self.dlog_collection.insert_one(DLog(category=category, data=data))
+        self.dlog_collection.insert_one(DLog(id=ObjectId(), category=category, data=data))
 
     def send_telegram_message(self, message: str) -> Result[list[int]]:
         token = self.dconfig.get("telegram_token")

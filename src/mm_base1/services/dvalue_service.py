@@ -77,11 +77,11 @@ class DValueStorage(dict[str, object]):
 
 class DValueService:
     dvalue_storage = DValueStorage()
-    dvalue_collection: MongoCollection[DValue]
+    dvalue_collection: MongoCollection[str, DValue]
 
     @classmethod
     @synchronized
-    def init_storage(cls, dvalue_collection: MongoCollection[DValue], dvalue_settings: DValueStorage) -> DValueStorage:
+    def init_storage(cls, dvalue_collection: MongoCollection[str, DValue], dvalue_settings: DValueStorage) -> DValueStorage:
         cls.dvalue_collection = dvalue_collection
         persistent_keys = []
         # attrs: list[DV[T]] = DV.get_attrs_from_settings(dvalue_settings)
@@ -121,13 +121,13 @@ class DValueService:
     @classmethod
     def init_persistent_value(cls, key: str, value: object) -> None:
         if not cls.dvalue_collection.exists({"_id": key}):
-            cls.dvalue_collection.insert_one(DValue(_id=key, value=cls.encode_value(value)))
+            cls.dvalue_collection.insert_one(DValue(id=key, value=cls.encode_value(value)))
         else:
             cls.update_persistent_value(key, value)
 
     @classmethod
     def update_persistent_value(cls, key: str, value: object) -> None:
-        cls.dvalue_collection.update_by_id(key, {"$set": {"value": cls.encode_value(value), "updated_at": utc_now()}})
+        cls.dvalue_collection.update(key, {"$set": {"value": cls.encode_value(value), "updated_at": utc_now()}})
 
     @staticmethod
     def encode_value(value: object) -> str:
