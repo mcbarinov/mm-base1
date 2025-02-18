@@ -1,5 +1,6 @@
 import random
 
+from bson import ObjectId
 from pymongo.results import InsertOneResult
 
 from app.models import Data, DataStatus
@@ -18,4 +19,4 @@ class MainService(AppService):
             {"status": status, "value": value, "large-data": "abc" * 100},
         )
         self.send_telegram_message(f"a new data: {value}")
-        return self.db.data.insert_one(Data(status=status, value=value))
+        return self.db.data.insert_one(Data(id=ObjectId(), status=status, value=value))

@@ -22,6 +22,6 @@ def init(app: App) -> APIRouter:
 
     @router.delete("/{pk}")
     def delete_data(pk):
-        return app.db.data.delete_by_id(pk)
+        return app.db.data.delete(pk)
 
     return router

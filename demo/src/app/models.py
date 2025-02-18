@@ -1,7 +1,8 @@
 from datetime import datetime
 from enum import Enum, unique
 
-from mm_mongo import MongoModel, ObjectIdStr
+from bson import ObjectId
+from mm_mongo import MongoModel
 from mm_std import utc_now
 from pydantic import Field
 
@@ -12,13 +13,12 @@ class DataStatus(str, Enum):
     ERROR = "ERROR"
 
 
-class Data(MongoModel):
-    id: ObjectIdStr | None = Field(None, alias="_id")
+class Data(MongoModel[ObjectId]):
     status: DataStatus
     value: int
     created_at: datetime = Field(default_factory=utc_now)
 
-    __collection__ = "data"
+    __collection__: str = "data"
     __indexes__ = ["status", "created_at"]
     __validator__ = {
         "$jsonSchema": {
