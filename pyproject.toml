@@ -1,10 +1,10 @@
 [project]
 name = "mm-base1"
-version = "0.2a1"
+version = "0.2.0"
 description = ""
 requires-python = ">=3.12"
 dependencies = [
-    "mm-mongo~=0.2a5",
+    "mm-mongo~=0.2.0",
     "mm-telegram~=0.0.4",
     "fastapi[all]~=0.115.8",
     "aiofiles~=24.1.0",

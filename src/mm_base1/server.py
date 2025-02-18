@@ -29,6 +29,7 @@ from starlette.types import Lifespan
 from mm_base1.app import BaseApp
 from mm_base1.errors import UserError
 from mm_base1.jinja import Templates
+from mm_base1.json_encoder import add_custom_encodings
 from mm_base1.routers import (
     base_ui_router,
     dconfig_router,
@@ -123,6 +124,7 @@ class Server:
 
         current_dir = Path(__file__).parent.absolute()
         self.server.mount("/static", StaticFiles(directory=current_dir.joinpath("static")), name="static")
+        add_custom_encodings()
 
     def _configure_openapi(self) -> None:
         @self.server.get("/openapi.json", tags=["openapi"], include_in_schema=False)
