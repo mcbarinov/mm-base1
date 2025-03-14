@@ -24,7 +24,7 @@ def init(app: App) -> APIRouter:
         return await file.read()
 
     @router.post("/data/generate")
-    def generate_data() -> MongoInsertOneResult[ObjectId]:
+    def generate_data() -> MongoInsertOneResult:
         return app.data_service.generate_data()
 
     @router.get("/data/{pk}")
