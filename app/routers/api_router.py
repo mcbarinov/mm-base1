@@ -1,9 +1,10 @@
+import time
 from decimal import Decimal
 from typing import Annotated
 
 from bson import ObjectId
 from fastapi import APIRouter, File, UploadFile
-from mm_mongo import mongo_query
+from mm_mongo import MongoInsertOneResult, mongo_query
 from mm_std import Err, Ok, utc_now
 from starlette.responses import PlainTextResponse
 
@@ -23,7 +24,7 @@ def init(app: App) -> APIRouter:
         return await file.read()
 
     @router.post("/data/generate")
-    def generate_data():
+    def generate_data() -> MongoInsertOneResult[ObjectId]:
         return app.data_service.generate_data()
 
     @router.get("/data/{pk}")
@@ -37,6 +38,12 @@ def init(app: App) -> APIRouter:
     @router.delete("/data/{pk}")
     def delete_data(pk: ObjectId):
         return app.db.data.delete(pk)
+
+    @router.get("/sleep/{seconds}")
+    def sleep(seconds: int):
+        app.logger.debug("sleep %s seconds called", seconds)
+        time.sleep(seconds)
+        return f"sleep {seconds} seconds"
 
     @router.get("/test")
     def test_all():

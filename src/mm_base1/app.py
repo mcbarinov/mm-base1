@@ -34,7 +34,7 @@ class BaseApp:
             file_path=f"{app_config.data_dir}/app.log",
             level=logging.DEBUG if self.app_config.debug else logging.INFO,
         )
-        conn = MongoConnection.connect(app_config.database_url)
+        conn = MongoConnection(app_config.database_url)
         self.mongo_client = conn.client
         self.database = conn.database
         self.dconfig_collection: MongoCollection[str, DConfig] = MongoCollection(self.database, DConfig)

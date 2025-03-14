@@ -1,18 +1,18 @@
 [project]
 name = "mm-base1"
-version = "0.2.0"
+version = "0.2.1"
 description = ""
 requires-python = ">=3.12"
 dependencies = [
-    "mm-mongo~=0.2.0",
-    "mm-telegram~=0.0.4",
-    "fastapi[all]~=0.115.8",
+    "mm-mongo~=0.3.6",
+    "mm-telegram~=0.0.5",
+    "fastapi[all]~=0.115.11",
     "aiofiles~=24.1.0",
     "itsdangerous~=2.2.0",
     "WTForms~=3.2.1",
     "gunicorn~=23.0.0",
     "pyTelegramBotAPI~=4.26.0",
-    "jinja2~=3.1.5",
+    "jinja2~=3.1.6",
 ]
 
 [build-system]
@@ -21,10 +21,10 @@ build-backend = "hatchling.build"
 
 [tool.uv]
 dev-dependencies = [
-    "pytest~=8.3.4",
+    "pytest~=8.3.5",
     "pytest-xdist~=3.6.1",
-    "pytest-httpserver~=1.1.1",
-    "ruff~=0.9.6",
+    "pytest-httpserver~=1.1.2",
+    "ruff~=0.10.0",
     "pip-audit~=2.8.0",
     "bandit~=1.8.3",
     "mypy~=1.15.0",

@@ -60,7 +60,7 @@ def yes_no(
         value = ""
     if not is_colored:
         clr = "black"
-    return Markup(f"<span style='color: {clr};'>{value}</span>")  # nosec
+    return Markup(f"<span style='color: {clr};'>{value}</span>")  # nosec  # noqa: S704
 
 
 def json_url_encode(data: dict[str, object]) -> str:

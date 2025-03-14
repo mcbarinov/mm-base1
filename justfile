@@ -30,8 +30,7 @@ test:
 publish: build
     git diff-index --quiet HEAD
     uvx twine upload dist/**
-    git tag -a 'v{{version}}' -m 'v{{version}}'
-    git push origin v{{version}}
+    git tag -a 'v{{version}}' -m 'v{{version}}' && git push origin v{{version}}
 
 cookiecutter:
     rm -rf cookiecutter/{{{{cookiecutter.project_slug}}
